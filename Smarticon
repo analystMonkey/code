@@ -1,0 +1,16 @@
+
+set.seed(1)
+
+mydata = train_imp1[,2:17]
+mydata$Alcohol_Consumption=train_imp1$Alcohol_Consumption
+rf1 = randomForest(mydata,as.factor(train_imp1$Happy),ntree=200,mtry=6,nodesize=50,importance = TRUE)
+test_preds1= predict(rf1, newdata=test_imp1,type="class")
+prediction_sub11 <- data.frame(ID=test_imp1$ID, Happy=test_preds1)
+write.csv(prediction_sub11, "sub11_rf.csv")
+
+
+start.time <- Sys.time()
+irf.tune = tune.randomForest(Happy ~ .,data=train_svm1,nodesize=c(50),mtry=1:18,ntree=200,control = tune.control(sampling="cross", cross=10))
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
